@@ -16,7 +16,6 @@ check_root() {
 }
 
 install_dependencies(){
-  # Install newest ruby with rubyenv
   apt-get install -y git-core curl nodejs zlib1g-dev build-essential libssl-dev \
           libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev \
           libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev
@@ -52,10 +51,13 @@ install_rbenv
 install_ruby_build
 chown -R dashing: ${USER_HOME}/.rbenv
 
-# as dashing user
+# TODO: as dashing user do this
 # rbenv install 2.3.1
 # gem install bundle
 # dashing new dashboard
 # mv dashboard /srv/www/
+# update KEY in config.ru
+
+# TODO; create upstart script
 
 update_bashrc
