@@ -81,4 +81,5 @@ configure_nginx
 rsync -av $HERE/etc/ /etc
 
 service nginx restart
+service dashing start
 # update KEY in config.ru
