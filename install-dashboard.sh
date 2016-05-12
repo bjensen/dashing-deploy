@@ -9,7 +9,9 @@ check_user() {
 check_user
 
 rbenv install 2.3.1
-gem install bundler
+rbenv local 2.3.1
+
+gem install bundler dashing
 
 dashing new dashboard
 cd dashboard
