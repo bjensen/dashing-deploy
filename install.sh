@@ -46,7 +46,7 @@ install_dashboard(){
 configure_user(){
   local content='export PATH="~/.rbenv/bin:${PATH}"
 export PATH="~/.rbenv/plugins/ruby-build/bin:${PATH}"
-eval "$(rbenv init -)'
+eval "$(rbenv init -)"'
 
   # For login-shells
   echo "$content" >> ${DASHING_USER_HOME}/.bashrc
