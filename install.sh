@@ -54,6 +54,7 @@ EOF
 configure_nginx(){
   rm /etc/nginx/sites-enabled/default
   rm /etc/nginx/sites-available/default
+  rsync -av $HERE/etc/ /etc
 }
 
 check_root
