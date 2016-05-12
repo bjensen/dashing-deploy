@@ -18,6 +18,7 @@ check_root() {
 }
 
 install_dependencies(){
+  apt-get update
   apt-get install -y nginx git-core curl nodejs zlib1g-dev build-essential libssl-dev \
           libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev \
           libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev
@@ -36,17 +37,22 @@ install_ruby_build(){
 
 install_dashboard(){
   sudo --user=${DASHING_USER} --login ${HERE}/install-dashboard.sh
+  mkdir -p /srv/www/
   mv ${DASHING_USER_HOME}/dashboard /srv/www/dashboard
+  mkdir -p /var/log/dashing
+  chown dashing: /var/log/dashing
 }
 
-prepare_user(){
-  adduser ${DASHING_USER}
-
-  cat >> ${DASHING_USER_HOME}/.profile <<'EOF'
-export PATH="~/.rbenv/bin:${PATH}"
+configure_user(){
+  local content='export PATH="~/.rbenv/bin:${PATH}"
 export PATH="~/.rbenv/plugins/ruby-build/bin:${PATH}"
-eval "$(rbenv init -)"
-EOF
+eval "$(rbenv init -)'
+
+  # For login-shells
+  echo "$content" >> ${DASHING_USER_HOME}/.bashrc
+
+  # For login shells
+  echo "$content" >> ${DASHING_USER_HOME}/.profile
 
   chown -R dashing: ${DASHING_USER_HOME}/.rbenv
 }
@@ -54,24 +60,25 @@ EOF
 configure_nginx(){
   rm /etc/nginx/sites-enabled/default
   rm /etc/nginx/sites-available/default
-  rsync -av $HERE/etc/ /etc
 }
 
 check_root
 
-apt-get update
+install_dependencies
+
+adduser ${DASHING_USER} --disabled-password --gecos ""
 
 install_rbenv
 install_ruby_build
 
-prepare_user
+configure_user
+
 install_dashboard
 
 configure_nginx
 
+# deploy conf
+rsync -av $HERE/etc/ /etc
+
+service nginx restart
 # update KEY in config.ru
-
-# TODO; create upstart script
-
-
-
